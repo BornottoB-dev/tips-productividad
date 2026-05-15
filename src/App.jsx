@@ -1,121 +1,51 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tips, setTips] = useState([
+    { id: 1, text: 'Organiza tu día con una lista de tareas.', votes: 0 },
+    { id: 2, text: 'Toma descansos cortos cada hora para mantener la concentración.', votes: 0 },
+    { id: 3, text: 'Prioriza las tareas más importantes primero.', votes: 0 },
+    { id: 4, text: 'Evita las distracciones apagando notificaciones.', votes: 0 },
+    { id: 5, text: 'Establece metas realistas y alcanzables.', votes: 0 }
+  ])
+
+  const [currentTipIndex, setCurrentTipIndex] = useState(0)
+
+  const voteTip = () => {
+    setTips(tips.map((tip, index) =>
+      index === currentTipIndex ? { ...tip, votes: tip.votes + 1 } : tip
+    ))
+  }
+
+  const showRandomTip = () => {
+    const randomIndex = Math.floor(Math.random() * tips.length)
+    setCurrentTipIndex(randomIndex)
+  }
+
+  const mostValuedTip = tips.reduce((max, tip) => tip.votes > max.votes ? tip : max, tips[0])
+  const hasVotes = tips.some(tip => tip.votes > 0)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div>
+      <h1>Tips de Productividad</h1>
 
-      <div className="ticks"></div>
+      <div>
+        <h2>Tip Actual</h2>
+        <p>{tips[currentTipIndex].text}</p>
+        <p>Votos: {tips[currentTipIndex].votes}</p>
+        <button onClick={voteTip}>Votar</button>
+        <button onClick={showRandomTip}>Tip Aleatorio</button>
+      </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <div>
+        <h2>Tip Más Valorado</h2>
+        {hasVotes ? (
+          <p>{mostValuedTip.text} (Votos: {mostValuedTip.votes})</p>
+        ) : (
+          <p>Todavía no hay votos.</p>
+        )}
+      </div>
+    </div>
   )
 }
 
